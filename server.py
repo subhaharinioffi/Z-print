@@ -7,10 +7,10 @@ MACHINE_ID = "XRX-429-IND"
 
 class TemplateHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/" or self.path.startswith("/?"):
-            # Serve upload.html by default
+        if self.path == "/" or self.path.startswith("/?") or self.path == "/index.html" or self.path == "/upload.html":
+            # Serve index.html by default
             try:
-                filepath = os.path.join(os.path.dirname(__file__), "upload.html")
+                filepath = os.path.join(os.path.dirname(__file__), "index.html")
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
                 

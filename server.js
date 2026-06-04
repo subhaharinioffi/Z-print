@@ -9,9 +9,9 @@ const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
   const pathname = parsedUrl.pathname;
 
-  if (pathname === '/' || pathname === '/upload.html') {
-    // Serve upload.html
-    const filepath = path.join(__dirname, 'upload.html');
+  if (pathname === '/' || pathname === '/index.html' || pathname === '/upload.html') {
+    // Serve index.html as the primary entrypoint
+    const filepath = path.join(__dirname, 'index.html');
     fs.readFile(filepath, 'utf8', (err, content) => {
       if (err) {
         res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
