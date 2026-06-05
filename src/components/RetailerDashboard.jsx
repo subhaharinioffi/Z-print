@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useZprint } from '../context/ZprintContext';
 
 const RetailerDashboard = () => {
-  const { retailerSession, logout, incomingOrders, setIncomingOrders, updateOrderStatus, activeCatalog, fetchCatalog, updateCatalogOnBackend } = useZprint();
+  const { retailerSession, logout, incomingOrders, setIncomingOrders, updateOrderStatus, activeCatalog, fetchCatalog, updateCatalogOnBackend, API_BASE_URL } = useZprint();
   const [activeCatalogTab, setActiveCatalogTab] = useState('bindings'); // 'bindings' or 'stationery'
   
   // Local catalog editor states
@@ -33,7 +33,7 @@ const RetailerDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch(`${API_BASE_URL}/api/orders`);
       const data = await res.json();
       // Filter orders relevant to this kiosk
       const filtered = data.filter(o => o.kioskId === retailerSession.id);

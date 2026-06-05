@@ -1,5 +1,25 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || '';
+
+const getWsUrl = (pathWithQuery) => {
+  const cleanPath = pathWithQuery.startsWith('/') ? pathWithQuery.substring(1) : pathWithQuery;
+  if (WS_BASE_URL) {
+    let base = WS_BASE_URL;
+    if (base.startsWith('http://')) {
+      base = base.replace('http://', 'ws://');
+    } else if (base.startsWith('https://')) {
+      base = base.replace('https://', 'wss://');
+    }
+    const separator = base.endsWith('/') ? '' : '/';
+    return `${base}${separator}${cleanPath}`;
+  } else {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}/${cleanPath}`;
+  }
+};
+
 const ZprintContext = createContext();
 
 export const useZprint = () => useContext(ZprintContext);
@@ -19,7 +39,7 @@ export const ZprintProvider = ({ children }) => {
   // Fetch Kiosk network
   const fetchKiosks = async () => {
     try {
-      const res = await fetch('/api/kiosks');
+      const res = await fetch(`${API_BASE_URL}/api/kiosks`);
       const data = await res.json();
       setKiosks(data);
     } catch (err) {
@@ -30,7 +50,7 @@ export const ZprintProvider = ({ children }) => {
   // Fetch Shop Catalog
   const fetchCatalog = async (kioskId) => {
     try {
-      const res = await fetch(`/api/kiosks/${kioskId}/catalog`);
+      const res = await fetch(`${API_BASE_URL}/api/kiosks/${kioskId}/catalog`);
       const data = await res.json();
       setActiveCatalog(data);
     } catch (err) {
@@ -41,7 +61,7 @@ export const ZprintProvider = ({ children }) => {
   // Register Retailer Shop
   const registerRetailer = async (name, email, password, location) => {
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, location })
@@ -57,7 +77,7 @@ export const ZprintProvider = ({ children }) => {
   // Login Retailer Shop
   const loginRetailer = async (email, password) => {
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -84,7 +104,7 @@ export const ZprintProvider = ({ children }) => {
   const updateCatalogOnBackend = async (bindings, stationery) => {
     if (!retailerSession) return;
     try {
-      const res = await fetch(`/api/kiosks/${retailerSession.id}/catalog`, {
+      const res = await fetch(`${API_BASE_URL}/api/kiosks/${retailerSession.id}/catalog`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bindings, stationery })
@@ -100,7 +120,7 @@ export const ZprintProvider = ({ children }) => {
   // Update Print Order Status (Retailer)
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const res = await fetch(`/api/orders/${orderId}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -138,7 +158,7 @@ export const ZprintProvider = ({ children }) => {
 
       onProgress(35, "Uploading Document to Cloudinary...");
 
-      const res = await fetch('/api/orders', {
+      const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         body: formData
       });
@@ -164,7 +184,7 @@ export const ZprintProvider = ({ children }) => {
     try {
       onProgress(15, "Connecting to Xerox scanner...");
 
-      const res = await fetch('/api/orders/scan', {
+      const res = await fetch(`${API_BASE_URL}/api/orders/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -198,8 +218,7 @@ export const ZprintProvider = ({ children }) => {
   const connectRetailerWebSocket = (kioskId) => {
     if (wsRef.current) wsRef.current.close();
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws?role=retailer&id=${kioskId}`;
+    const wsUrl = getWsUrl(`ws?role=retailer&id=${kioskId}`);
     const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (event) => {
@@ -220,8 +239,7 @@ export const ZprintProvider = ({ children }) => {
 
   // Customer WebSockets client stream connection for real-time progress
   const connectCustomerWebSocket = (orderId, onProgress) => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws?role=customer&id=${orderId}`;
+    const wsUrl = getWsUrl(`ws?role=customer&id=${orderId}`);
     const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (event) => {
@@ -276,7 +294,9 @@ export const ZprintProvider = ({ children }) => {
       setCurrentOrder,
       triggerPrintCheckout,
       triggerXeroxCheckout,
-      logout
+      logout,
+      API_BASE_URL,
+      WS_BASE_URL
     }}>
       {children}
     </ZprintContext.Provider>

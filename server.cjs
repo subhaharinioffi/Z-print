@@ -20,6 +20,17 @@ const upload = multer({
 const app = express();
 app.use(express.json());
 
+// Simple manual CORS configuration to support cross-origin requests (e.g. from Netlify)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Serve static build files in production
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -338,8 +349,8 @@ app.post('/api/orders/scan', async (req, res) => {
   res.status(201).json({ message: "Scan job initialized successfully", order: newOrder });
 });
 
-// Single Page App Fallback Route
-app.get(/.*/, (req, res) => {
+// Single Page App Fallback Route (excludes API and WebSocket routes)
+app.get(/^(?!\/api|\/ws).*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
@@ -355,7 +366,7 @@ const customerSockets = new Map(); // orderId -> WS Client
 
 // Upgrade HTTP to WS connections
 server.on('upgrade', (request, socket, head) => {
-  const { searchParams } = new URL(request.url, `http://${request.headers.host}`);
+  const { searchParams } = new URL(request.url, 'http://localhost');
   const role = searchParams.get('role');
   const id = searchParams.get('id');
 
