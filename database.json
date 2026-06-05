@@ -1,0 +1,46 @@
+{
+  "retailers": [
+    {
+      "id": "XRX-101-PRN",
+      "name": "Central Lobby Kiosk Point",
+      "email": "lobby@zprint.com",
+      "password": "lobby123",
+      "location": "Central Lobby (A4/A3)",
+      "online": true
+    },
+    {
+      "id": "XRX-102-XRX",
+      "name": "Library West Wing Copier",
+      "email": "library@zprint.com",
+      "password": "library123",
+      "location": "Library Floor 1",
+      "online": true
+    }
+  ],
+  "catalogs": {
+    "XRX-101-PRN": {
+      "bindings": [
+        { "id": "spiral", "name": "Spiral Binding", "price": 25.00, "enabled": true },
+        { "id": "hardcover", "name": "Hard Cover Binding", "price": 80.00, "enabled": true },
+        { "id": "softcover", "name": "Soft Cover Binding", "price": 45.00, "enabled": false }
+      ],
+      "stationery": [
+        { "id": "blue-pen", "name": "Blue Ballpoint Pen", "price": 10.00, "stock": 50, "enabled": true },
+        { "id": "black-pen", "name": "Black Gel Pen", "price": 15.00, "stock": 30, "enabled": true },
+        { "id": "a4-notebook", "name": "A4 Notebook (Single Line)", "price": 40.00, "stock": 20, "enabled": true },
+        { "id": "pencil", "name": "HB Drawing Pencil", "price": 5.00, "stock": 100, "enabled": true }
+      ]
+    },
+    "XRX-102-XRX": {
+      "bindings": [
+        { "id": "spiral", "name": "Spiral Binding", "price": 20.00, "enabled": true },
+        { "id": "softcover", "name": "Soft Cover Binding", "price": 50.00, "enabled": true }
+      ],
+      "stationery": [
+        { "id": "blue-pen", "name": "Blue Ballpoint Pen", "price": 10.00, "stock": 15, "enabled": true },
+        { "id": "notebook", "name": "Pocket Notebook", "price": 25.00, "stock": 10, "enabled": true }
+      ]
+    }
+  },
+  "orders": []
+}

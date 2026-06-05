@@ -1,0 +1,6 @@
+/* Baseline resets, all primary styles are inside styles/main.css and styles/variables.css */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+}

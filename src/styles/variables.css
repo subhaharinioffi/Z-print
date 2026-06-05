@@ -1,0 +1,70 @@
+:root {
+  /* Premium Red & White Color System */
+  --primary: #e11d48;        /* Crimson Red */
+  --primary-hover: #be123c;  /* Deep Crimson */
+  --primary-light: #fef2f2;  /* Soft Rose Background */
+  --primary-border: #fee2e2; /* Soft Rose Border */
+  
+  --secondary: #fa5252;      /* Warm Accent Red */
+  --secondary-hover: #e03131;
+  
+  --success: #22c55e;        /* Mint Green */
+  --success-bg: #f0fdf4;
+  --success-border: #dcfce7;
+  
+  --warning: #f59e0b;        /* Amber */
+  --warning-bg: #fffbeb;
+  --warning-border: #fef3c7;
+
+  --gray-light: #fafafa;
+  --gray-border: #e5e7eb;
+  --gray-text: #9ca3af;
+  --dark-text: #1f2937;
+  --light-text: #4b5563;
+  --white: #ffffff;
+  
+  /* Layout Sizing & Shapes */
+  --max-width: 460px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  
+  /* Shadow & Glass Effects */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.025);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.08);
+  --shadow-brand: 0 4px 16px rgba(225, 29, 72, 0.12);
+  
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(243, 244, 246, 0.95);
+  
+  /* Transitions */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s ease-out;
+}
+
+/* Custom Keyframe Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes scanBeam {
+  0% { top: 0%; opacity: 0.1; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
